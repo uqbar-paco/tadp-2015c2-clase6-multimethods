@@ -10,7 +10,16 @@ class PartialBlock
   def matches(*parameters)
     return false if parameters.size != types.size
     parameters.zip(types).all? do |parameter,type|
-      parameter.is_a? type
+      matches_parameter(parameter,type)
+    end
+  end
+
+  def matches_parameter(parameter,type)
+    case type
+      when Module
+        parameter.is_a? type
+      when Array
+        type.all? {|method|parameter.respond_to? method}
     end
   end
 
@@ -28,7 +37,14 @@ class PartialBlock
   end
 
    def parameters_distance(*parameters)
-     @types.zip(parameters).map  { |type,parameter| parameter.class.ancestors.index(type) }.reduce(:+)
+     @types.zip(parameters).map  do |type,parameter|
+       case type
+         when Module
+           parameter.class.ancestors.index(type)
+         when Array
+           1 #because reasons
+       end
+     end.reduce(:+)
    end
 
 end
