@@ -50,7 +50,7 @@ end
 
 class Object
   alias_method :old_respond_to?, :respond_to?
-  
+
   def respond_to? (sym, is_private = false, types = nil)
     types.nil? ? old_respond_to?(sym, is_private) : singleton_class.multimethod_objects(true).any? { |mm| mm.comply?(sym, types) }
   end
