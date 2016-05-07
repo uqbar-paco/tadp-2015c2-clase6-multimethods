@@ -42,7 +42,9 @@ class PartialBlock
          when Module
            parameter.class.ancestors.index(type)
          when Array
-           1 #because reasons
+           ancestor = parameter.class.ancestors
+                          .detect { |ancestor| type.any? {|method|ancestor.instance_methods(false).include? method} }
+           parameter.class.ancestors.index(ancestor)
        end
      end.reduce(:+)
    end
