@@ -8,26 +8,19 @@ class PartialBlock
   end
 
   def matches(*parameters)
-    return false if parameters.size != types.size
-    parameters.zip(types).all? do |parameter,type|
-      matches_parameter(parameter,type)
-    end
-  end
-
-  def matches_parameter(parameter,type)
-    case type
-      when Module
-        parameter.is_a? type
-      when Array
-        type.all? {|method|parameter.respond_to? method}
-    end
+    parameter_types = parameters.map {|param| param.class}
+    match_types(*parameter_types)
   end
 
   def match_types(*received_types)
-    puts received_types.to_s,types.to_s
     return false if received_types.size != types.size
     received_types.zip(types).all? do |received_type,type|
-      received_type <= type
+      case type
+        when Module
+          received_type <= type
+        when Array
+          type.all? { |method| received_type.instance_methods.include? method }
+      end
     end
   end
 
