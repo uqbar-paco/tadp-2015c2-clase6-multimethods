@@ -14,10 +14,8 @@ class MultiMethod
     definition ? definition.call(*args) : raise(NoMethodError)
   end
 
-  def matches?(types)
-    self.definitions.any? do |definition|
-      definition.matches_signature?(types)
-    end
+  def matches?(sym, types)
+    self.selector.eql?(sym) && self.definitions.any? { |definition| definition.matches_signature?(types) }
   end
 
 end

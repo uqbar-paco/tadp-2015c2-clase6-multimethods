@@ -29,7 +29,7 @@ class Module
 
   def get_multimethod(sym)
     multimethod = self.multimethod(sym) || MultiMethod.new(sym)
-    actual_multimethods << multimethod unless self.has_multimethod?(multimethod)
+    actual_multimethods << multimethod unless has_multimethod?(multimethod)
     multimethod
   end
 
@@ -39,7 +39,7 @@ end
 class Object
 
   def respond_to?(sym, include_private = false, signature = nil)
-    signature.nil? ? super(sym, include_private) : self.class.actual_multimethods.any? { |mm| mm.matches?(signature) }
+    signature.nil? ? super(sym, include_private) : self.class.actual_multimethods.any? { |mm| mm.matches?(sym, signature) }
   end
 
 =begin
